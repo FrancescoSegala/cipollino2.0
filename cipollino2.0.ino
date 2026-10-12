@@ -8,7 +8,7 @@ RTC_DS3231 rtc;
 const int hallPosition0 = 4; // Posizione di stop finale
 const int hallPosition1 = 2; // Posizione intermedia di controllo
 
-String ORE_PASTO[] = { "2202", "2204", "2206", "2208", "2159", "2151"}; 
+String ORE_PASTO[] = { "0800", "1300", "1945"}; 
 
 // Variabili per il controllo del Servo 360°
 
@@ -23,12 +23,18 @@ const int ONE_SEC_MILLIS = 1000 ;
 void setup() {
   Serial.begin(9600);
   
+  
   myServo.attach(9);
   ferma(); // Assicurati che sia fermo all'avvio
 
   if (!rtc.begin()) {
     Serial.println("Errore: RTC non trovato!");
   }
+
+  //Impostare l'orario la prima volta 
+  //(workaround : caricalo cosi e poi ricaricalo commentando la riga)
+  //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  
   if (rtc.lostPower()) {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
@@ -38,6 +44,11 @@ void setup() {
 }
 
 void loop() {
+  
+  // giraAvanti();
+  // delay(2 * ONE_MIN_MILLIS);
+  // return ;
+
   String oraAttuale = get_time_rtc();
   Serial.print("Ora attuale: ");
   Serial.println(oraAttuale);
